@@ -28,16 +28,20 @@
 1. Клонируйте репозиторий:
    ```bash
    git clone https://github.com/yourusername/glowquest.git
-   cd glowquest```
+   cd glowquest
+   ```
 
 3. Создайте виртуальное окружение и установите зависимости:
   ```bash
    python -m venv venv
    source venv/bin/activate # На Windows используйте `venv\Scripts\activate`
-   pip install -r requirements.txt```
+   pip install -r requirements.txt
+```
 
 3. Запустите игру:
-  ```main.py```
+  ```bash
+   main.py
+```
 
 Вклад
 Добро пожаловать к участию в разработке! Пожалуйста, форкните репозиторий и отправьте pull request для любых улучшений или исправлений ошибок.

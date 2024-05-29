@@ -26,11 +26,11 @@
 Чтобы запустить Светоискатель локально, выполните следующие шаги:
 
 1. Клонируйте репозиторий:
-   ```bash
+   `
    git clone https://github.com/yourusername/glowquest.git
-   cd glowquest```
+   cd glowquest`
 
-2. Создайте виртуальное окружение и установите зависимости:
+3. Создайте виртуальное окружение и установите зависимости:
   ```python -m venv venv
   source venv/bin/activate # На Windows используйте `venv\Scripts\activate`
   pip install -r requirements.txt```

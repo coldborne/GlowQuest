@@ -27,7 +27,7 @@ GlowQuest - это головоломка, в которой игроки пов
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/yourusername/glowquest.git
+   git clone https://github.com/coldborne/glowquest.git
    cd glowquest
    ```
 

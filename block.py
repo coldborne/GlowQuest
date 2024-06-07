@@ -1,23 +1,37 @@
 class Block:
     def __init__(self, num_directions=4):
         self.num_directions = num_directions
-        self.connections = [False] * num_directions
+        self.sides = [False] * num_directions
+        self.is_highlighted = False
 
-    def switch_connection(self, direction):
-        if 0 <= direction < self.num_directions:
-            self.connections[direction] = not self.connections[direction]
+    def enable_connection(self):
+        self.is_highlighted = True
 
-    def is_connected(self, other_block):
-        for direction in range(self.num_directions):
-            opposite_direction = (direction + self.num_directions // 2) % self.num_directions
+    def disable_connection(self):
+        self.is_highlighted = False
 
-            if self.connections[direction] and other_block.connections[opposite_direction]:
-                return True
-        return False
+    def is_connected(self, other_block, direction):
+        side = self.sides[direction]
+        opposite_side_index = (direction + self.num_directions // 2) % self.num_directions
+        opposite_side = other_block.get_sides()[opposite_side_index]
 
-    def get_connections(self):
-        return self.connections.copy()
+        return side and opposite_side
 
     def rotate(self, steps=1):
         steps = steps % self.num_directions
-        self.connections = self.connections[-steps:] + self.connections[:-steps]
+        self.sides = self.sides[-steps:] + self.sides[:-steps]
+
+    def get_sides(self):
+        return self.sides.copy()
+
+
+class StraightBlock(Block):
+    def __init__(self):
+        super().__init__()
+        self.sides = [True, False, True, False]
+
+
+class CornerBlock(Block):
+    def __init__(self):
+        super().__init__()
+        self.sides = [True, True, False, False]

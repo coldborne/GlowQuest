@@ -7,11 +7,18 @@ from block import StraightBlock, CornerBlock
 class GameBoard:
     def __init__(self, size, start_x, start_y):
         self.size = size
-        self.grid = self.create_game_field(size, size)
+        self.grid = self.__create_game_field(self.size, self.size)
         self.start_position = (start_x, start_y)
-        self.update_connections(start_x, start_y)
+        self.__update_connections(start_x, start_y)
 
-    def create_game_field(self, width, height):
+    def rotate_block(self, x, y, steps=1):
+        if not (0 <= x < len(self.grid) and 0 <= y < len(self.grid[x])):
+            raise IndexError("x or y is out of bounds")
+
+        self.grid[x][y].rotate(steps)
+        self.__update_connections(self.start_position[0], self.start_position[1])
+
+    def __create_game_field(self, width, height):
         blocks = []
 
         for _ in range(width):
@@ -27,11 +34,7 @@ class GameBoard:
 
         return blocks
 
-    def rotate_block(self, x, y, steps=1):
-        self.grid[x][y].rotate(steps)
-        self.update_connections(self.start_position[0], self.start_position[1])
-
-    def update_connections(self, start_x, start_y):
+    def __update_connections(self, start_x, start_y):
         for row in self.grid:
             for block in row:
                 block.is_highlighted = False

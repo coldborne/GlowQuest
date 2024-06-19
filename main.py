@@ -1,50 +1,66 @@
 import random
 import tkinter as tk
-from tkinter import simpledialog, messagebox
-from block import Block
+from tkinter import simpledialog
+from block import StraightBlock, CornerBlock
 
 
-# Класс игрового поля
 class GameBoard:
-    def __init__(self, size, start_x, start_y, start_directions):
+    def __init__(self, size, start_x, start_y):
         self.size = size
         self.grid = self.create_game_field(size, size)
-        # Начальный коннект для верхнего левого блока
-        self.add_connections(start_x, start_y, start_directions)  # Например, верхнее направление
+        self.start_position = (start_x, start_y)
         self.update_connections(start_x, start_y)
 
     def create_game_field(self, width, height):
-        return [[Block() for _ in range(width)] for _ in range(height)]
+        blocks = []
+
+        for _ in range(width):
+            row = []
+
+            for _ in range(height):
+                if random.randint(0, 1) == 0:
+                    row.append(StraightBlock())
+                else:
+                    row.append(CornerBlock())
+
+            blocks.append(row)
+
+        return blocks
 
     def rotate_block(self, x, y, steps=1):
         self.grid[x][y].rotate(steps)
-        self.update_connections(x, y)
+        self.update_connections(self.start_position[0], self.start_position[1])
 
     def update_connections(self, start_x, start_y):
+        for row in self.grid:
+            for block in row:
+                block.is_highlighted = False
+
+        self.grid[start_x][start_y].enable_connection()
+
         visited = set()
         queue = [(start_x, start_y)]
+
+        directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
         while queue:
             x, y = queue.pop(0)
 
-            if (x, y) in visited:
-                continue
+            if (x, y) not in visited:
+                visited.add((x, y))
+                current_block = self.grid[x][y]
 
-            visited.add((x, y))
-            current_block = self.grid[x][y]
+                for direction, (dx, dy) in enumerate(directions):
+                    if current_block.sides[direction]:
+                        next_x, next_y = x + dx, y + dy
 
-            for direction, (nx, ny) in enumerate([(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]):
-                if 0 <= nx < self.size and 0 <= ny < self.size:
-                    neighbor = self.grid[nx][ny]
-                    if current_block.is_connected(neighbor):
-                        if (nx, ny) not in visited:
-                            queue.append((nx, ny))
+                        if 0 <= next_x < self.size and 0 <= next_y < self.size:
+                            neighbor = self.grid[next_x][next_y]
 
-    def add_connections(self, x, y, directions):
-        for direction in directions:
-            self.grid[x][y].switch_connection(direction)
-
-        self.update_connections(x, y)
+                            if current_block.is_connected(neighbor, direction):
+                                if not neighbor.is_highlighted:
+                                    neighbor.enable_connection()
+                                    queue.append((next_x, next_y))
 
 
 # Графический интерфейс с использованием Tkinter
